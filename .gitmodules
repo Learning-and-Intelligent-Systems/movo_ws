@@ -1,0 +1,3 @@
+[submodule "src/kinova-movo"]
+	path = src/kinova-movo
+	url = git@github.com:Kinovarobotics/kinova-movo.git
