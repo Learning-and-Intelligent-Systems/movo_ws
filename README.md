@@ -2,8 +2,11 @@
 
 This git project is a catkin workspace.  
 
-To initialize the kinova submodules, do the following:
-```
-git submodule init 
-git submodule update 
-```
+
+In this directory use:
+``catkin make 
+source ~.bashrc ``
+
+To launch a simulated movo:
+``roslaunch lis_movo_pkg sim.launch``
+

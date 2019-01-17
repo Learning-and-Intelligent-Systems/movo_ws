@@ -77,14 +77,26 @@ export MOVO_HAS_LEFT_KG2_GRIPPER=false
 #Kinova KG3
 export USE_KG3_FOR_MOVEIT_CONFIG=false
 export MOVO_HAS_RIGHT_KG3_GRIPPER=false
-export MOVO_HAS_LEFT_KG3_GRIPPER=true
+export MOVO_HAS_LEFT_KG3_GRIPPER=false # should be true
+
 
 #Robotiq 85 two finger gripper
 export USE_R85_FOR_MOVEIT_CONFIG=false
-export MOVO_HAS_RIGHT_ROBOTIQ_GRIPPER=true
+export MOVO_HAS_RIGHT_ROBOTIQ_GRIPPER=false # should be true
 export MOVO_HAS_LEFT_ROBOTIQ_GRIPPER=false
 
-export USE_MIXED_CONFIG_FOR_MOVEIT_CONFIG=true
+export USE_MIXED_CONFIG_FOR_MOVEIT_CONFIG=false # should be true
+
+
+#XXX  MOVEIT HACK
+export USE_KG3_FOR_MOVEIT_CONFIG=true
+export MOVO_HAS_RIGHT_KG3_GRIPPER=true
+export MOVO_HAS_LEFT_KG3_GRIPPER=true 
+
+#export USE_R85_FOR_MOVEIT_CONFIG=true
+#export MOVO_HAS_RIGHT_ROBOTIQ_GRIPPER=true
+#export MOVO_HAS_LEFT_ROBOTIQ_GRIPPER=true
+#export USE_MIXED_CONFIG_FOR_MOVEIT_CONFIG=false
 
 #export for kinect2 bridge
 export OCL_IGNORE_SELF_TEST=1

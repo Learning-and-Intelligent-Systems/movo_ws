@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+
+<launch>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find lis_movo_pkg)/launch/lis.rviz" output="screen"/>
+
+</launch>
