@@ -7,7 +7,7 @@ In this directory use:
 ```
 catkin make 
 
-source ~.bashrc 
+source ~\.bashrc 
 ```
 
 To launch a simulated movo:
