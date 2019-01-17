@@ -19,11 +19,18 @@ To launch move group:
 `` roslaunch lis_movo_pkg moveit.launch``
 
 
-To untuck the arms:
-``rosrun lis_movo_pkg tuckarms.py -u``
+With move group running, you can use the following commands to tuck and untuck the arms.
 
 
-To tuck the arms:
-``rosrun lis_movo_pkg tuckarms.py -t``
+* To untuck the arms:
+    ``rosrun lis_movo_pkg tuckarms.py -u``
+
+* To tuck the arms:
+    ``rosrun lis_movo_pkg tuckarms.py -t``
+
+--------------
+
+In ``src/lis_movo_pkg/scripts`` there are some example files for moving the head, torso, and base that work with the simulated robot.
+
 
 
