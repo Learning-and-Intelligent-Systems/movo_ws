@@ -4,9 +4,11 @@ This git project is a catkin workspace.
 
 
 In this directory use:
-``catkin make 
+```
+catkin make 
 
-source ~.bashrc ``
+source ~.bashrc 
+```
 
 To launch a simulated movo:
 ``roslaunch lis_movo_pkg sim.launch``
