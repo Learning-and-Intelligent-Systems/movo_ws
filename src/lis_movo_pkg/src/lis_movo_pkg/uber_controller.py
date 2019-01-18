@@ -7,6 +7,8 @@ import tf
 from control_msgs.msg import (
     FollowJointTrajectoryAction,
     FollowJointTrajectoryGoal,
+    GripperCommandAction,
+    GripperCommandGoal
 )
 
 from trajectory_msgs.msg import JointTrajectoryPoint
@@ -22,12 +24,12 @@ class UberController:
         FollowJointTrajectoryAction),
     'head':('movo/head_controller/follow_joint_trajectory',
 	FollowJointTrajectoryAction),
-    #'l_gripper': (
-    #    'l_gripper_controller/gripper_action', 
-    #    Pr2GripperCommandAction),
-    #'r_gripper': (
-    #    'r_gripper_controller/gripper_action',
-    #    Pr2GripperCommandAction),
+    'left_gripper': (
+        'movo/left_gripper_controller/gripper_cmd', 
+        GripperCommandAction),
+    'right_gripper': (
+        'movo/right_gripper_controller/gripper_cmd', 
+        GripperCommandAction),
     'right_joint': (
         'movo/right_arm_controller/follow_joint_trajectory',
         FollowJointTrajectoryAction),
@@ -55,6 +57,7 @@ class UberController:
         for item in self.simple_clients:
             self.clients[item]= SimpleActionClient(*self.simple_clients[item]) 
             rospy.loginfo("%s client started" % item )
+        rospy.sleep(1)
         
         for item in self.clients:
             res = self.clients[item].wait_for_server(rospy.Duration(.1))
@@ -101,11 +104,6 @@ class UberController:
         self.joint_positions = pos
         self.joint_velocities = vel 
     
-    #def r_gripper_eventCB(self, data):
-    #    self.gripper_event['r'] = data
-
-    #def l_gripper_eventCB(self, data):
-    #    self.gripper_event['l'] = data
 
     def get_arm(self, char):
         if char == "l" or char =="left":
@@ -144,6 +142,7 @@ class UberController:
     #return the current Cartesian pose of the gripper
     def return_cartesian_pose(self, arm, frame = 'base_link'):
         end_time = rospy.Time.now() + rospy.Duration(5)
+        arm = self.get_arm(arm)
         link = arm + "_gripper_finger1_finger_tip_link"
         while not rospy.is_shutdown() and rospy.Time.now() < end_time:
             try:
@@ -201,12 +200,12 @@ class UberController:
         self.command_joint_pose('head', angles, time, blocking)
     
     def command_gripper(self, arm, position, max_effort, blocking, timeout):
-        raise NotImplementedError()
-        #goal = Pr2GripperCommandGoal()
-        #goal.command.position = position
-        #goal.command.max_effort = max_effort
-        #client = "%s_gripper"% arm
-        #return self.send_command("%s_gripper"%arm, goal, blocking, timeout)
+        goal = GripperCommandGoal()
+        goal.command.position = position
+        goal.command.max_effort = max_effort
+        arm = self.get_arm(arm)
+        client = "%s_gripper"% arm
+        return self.send_command(client, goal, blocking, timeout)
     
     """ 
     ===============================================================
@@ -282,7 +281,7 @@ class UberController:
 """ 
              
 class Uber(UberController):
-    timeout = 10
+    timeout = 3
 
     def freeze(self, arm):
         goal = FollowJointTrajectoryGoal()
@@ -294,10 +293,10 @@ class Uber(UberController):
         self.timeout = time
 
     def open_gripper(self, arm, blocking=True):
-        self.command_gripper(arm, 0.1, -1.0, blocking=blocking, timeout=self.timeout)
+        self.command_gripper(arm, 0.165, -1.0, blocking=blocking, timeout=self.timeout)
     
     def close_gripper(self,arm, blocking=True):
-        self.command_gripper(arm, 0, 100, blocking=blocking, timeout=self.timeout)
+        self.command_gripper(arm, 1.0, 10, blocking=blocking, timeout=self.timeout)
 
     def look_down_center(self, blocking=True):
         self.command_head([0,-np.pi/6.], 3, blocking=blocking)
@@ -306,10 +305,10 @@ class Uber(UberController):
         self.command_head([0,0], 3, blocking=blocking)
 
     def lift_torso(self, blocking=True):
-        self.command_torso(0.2, blocking=blocking, timeout=self.timeout)
+        self.command_torso(0.2, blocking=blocking, time=self.timeout)
     
     def down_torso(self, blocking=True):
-        self.command_torso(0.1, blocking=blocking, timeout=self.timeout)
+        self.command_torso(0.1, blocking=blocking, time=self.timeout)
 
     def move_arm_to_front(self, arm, blocking=True):
         angles = [0.]*7
