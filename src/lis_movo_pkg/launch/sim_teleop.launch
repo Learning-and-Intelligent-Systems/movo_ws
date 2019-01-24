@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Bring up the platform in sim with all models, controllers, sensors estimates -->
+    <include file="$(find movo_gazebo)/launch/movo.launch">
+        <arg name="gui" value="false"/>
+    </include>
+
+     
+    <!-- Bring up an rviz window -->
+    <node pkg="si_utils" type="timed_roslaunch"
+        args="10 lis_movo_pkg view_robot.launch"
+        name="viz_bringup" output="screen"/>
+    
+    <!-- Start joy node -->
+    <node respawn="true" pkg="joy" type="joy_node" name="turtle_joy" >
+        <param name="dev" type="string" value="/dev/input/js0" />
+        <param name="deadzone" value="0.12" />
+    </node>
+
+    <!-- Start teleop -->
+    <node name="base_teleop" pkg="lis_movo_pkg" type="base_teleop.py" 
+        args="--test" respawn="true" />
+
+</launch>
