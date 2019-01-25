@@ -26,11 +26,11 @@
     <!-- Platform specific robot state publisher and parameters -->
     <include file="$(find movo_description)/launch/movo_upload.launch"/>
         
-    <!-- Platform Perception -->
+    <!-- Platform Perception
     <node pkg="si_utils" type="timed_roslaunch"
         args="14 movo_bringup movo_perception.launch"
         name="perception_bringup" output="screen"/>
-
+    -->
 
     <!-- Moveit bringup-->
     <node pkg="si_utils" type="timed_roslaunch"

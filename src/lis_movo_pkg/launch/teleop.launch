@@ -16,11 +16,12 @@
     <!-- Start joy node -->
     <node respawn="true" pkg="joy" type="joy_node" name="turtle_joy" >
         <param name="dev" type="string" value="/dev/input/js0" />
-        <param name="deadzone" value="0.12" />
+        <param name="deadzone" value="0.1" />
+        <param name="autorepeat_rate" type="double" value="40" />
     </node>
 
     <!-- Start teleop -->
     <node name="base_teleop" pkg="lis_movo_pkg" type="base_teleop.py" 
-        args="--test" respawn="true" />
+        args="--test" respawn="true" output="screen"/>
 
 </launch>

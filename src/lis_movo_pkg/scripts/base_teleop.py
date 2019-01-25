@@ -35,14 +35,14 @@ def callback(joy):
     twist.linear.y = d*vel_y
     twist.angular.z = d*rotate
     pub.publish(twist)
-    rospy.loginfo("publishing %s " % twist)
+    #rospy.loginfo("publishing %s " % twist)
 
 def start():
     rospy.init_node('movojoy')
     global pub, sub, cfg_cmd, cfg_pub
     cfg_cmd = ConfigCmd()
     cfg_pub = rospy.Publisher('/movo/gp_command', ConfigCmd, queue_size=1)
-    pub = rospy.Publisher('/movo/teleop/cmd_vel', Twist, queue_size=1)
+    pub = rospy.Publisher('/movo/cmd_vel', Twist, queue_size=1)
     sub = rospy.Subscriber("joy", Joy, callback, queue_size=1)
     rospy.spin()
 
