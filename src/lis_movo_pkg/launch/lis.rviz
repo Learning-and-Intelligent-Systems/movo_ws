@@ -7,15 +7,10 @@ Panels:
         - /Global Options1
         - /Status1
         - /RobotModel1/Links1
+        - /Image1
         - /TF1
         - /TF1/Frames1
-        - /TF1/Frames1/left_gripper_finger1_finger_tip_link1
         - /TF1/Tree1
-        - /TF1/Tree1/odom1
-        - /TF1/Tree1/odom1/base_link1
-        - /TF1/Tree1/odom1/base_link1/base_chassis_link1
-        - /TF1/Tree1/odom1/base_link1/base_chassis_link1/linear_actuator_fixed_link1
-        - /TF1/Tree1/odom1/base_link1/base_chassis_link1/linear_actuator_fixed_link1/linear_actuator_link1
       Splitter Ratio: 0.588933
     Tree Height: 171
   - Class: rviz/Selection
@@ -318,7 +313,7 @@ Visualization Manager:
       Visual Enabled: true
     - Class: rviz/Image
       Enabled: true
-      Image Topic: /kinect2/sd/image_depth
+      Image Topic: /kinect2/hd/image_color_rect
       Max Value: 1
       Median window: 5
       Min Value: 0
@@ -329,184 +324,48 @@ Visualization Manager:
       Unreliable: false
       Value: true
     - Class: rviz/TF
-      Enabled: true
+      Enabled: false
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        base_chassis_link:
-          Value: false
-        base_link:
-          Value: false
-        front_laser_link:
-          Value: false
-        kinect2_ir_link:
-          Value: false
-        kinect2_ir_optical_frame:
-          Value: false
-        kinect2_link:
-          Value: false
-        kinect2_rgb_link:
-          Value: false
-        kinect2_rgb_optical_frame:
-          Value: false
-        left_arm_half_1_link:
-          Value: false
-        left_arm_half_2_link:
-          Value: false
-        left_base_link:
-          Value: false
-        left_ee_link:
-          Value: false
-        left_forearm_link:
-          Value: false
-        left_gripper_base_link:
-          Value: false
-        left_gripper_finger1_finger_tip_link:
-          Value: true
-        left_gripper_finger1_knuckle_link:
-          Value: false
-        left_gripper_finger2_finger_tip_link:
-          Value: false
-        left_gripper_finger2_knuckle_link:
-          Value: false
-        left_gripper_finger3_finger_tip_link:
-          Value: false
-        left_gripper_finger3_knuckle_link:
-          Value: false
-        left_shoulder_link:
-          Value: false
-        left_wrist_3_link:
-          Value: false
-        left_wrist_spherical_1_link:
-          Value: false
-        left_wrist_spherical_2_link:
-          Value: false
-        linear_actuator_fixed_link:
-          Value: false
-        linear_actuator_link:
-          Value: false
-        lower_body_link:
-          Value: false
-        mid_body_link:
-          Value: false
-        odom:
-          Value: false
-        pan_base_link:
-          Value: false
-        pan_link:
-          Value: false
-        rear_laser_link:
-          Value: false
-        right_arm_half_1_link:
-          Value: false
-        right_arm_half_2_link:
-          Value: false
-        right_base_link:
-          Value: false
-        right_ee_link:
-          Value: false
-        right_forearm_link:
-          Value: false
-        right_gripper_base_link:
-          Value: false
-        right_gripper_finger1_finger_tip_link:
-          Value: false
-        right_gripper_finger1_knuckle_link:
-          Value: false
-        right_gripper_finger2_finger_tip_link:
-          Value: false
-        right_gripper_finger2_knuckle_link:
-          Value: false
-        right_gripper_finger3_finger_tip_link:
-          Value: false
-        right_gripper_finger3_knuckle_link:
-          Value: false
-        right_shoulder_link:
-          Value: false
-        right_wrist_3_link:
-          Value: false
-        right_wrist_spherical_1_link:
-          Value: false
-        right_wrist_spherical_2_link:
-          Value: false
-        sic_imu_frame:
-          Value: false
-        tilt_link:
-          Value: false
-        upper_body_link:
-          Value: false
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
-        odom:
-          base_link:
-            base_chassis_link:
-              front_laser_link:
-                {}
-              linear_actuator_fixed_link:
-                linear_actuator_link:
-                  left_base_link:
-                    left_shoulder_link:
-                      left_arm_half_1_link:
-                        left_arm_half_2_link:
-                          left_forearm_link:
-                            left_wrist_spherical_1_link:
-                              left_wrist_spherical_2_link:
-                                left_wrist_3_link:
-                                  left_ee_link:
-                                    left_gripper_base_link:
-                                      left_gripper_finger1_knuckle_link:
-                                        left_gripper_finger1_finger_tip_link:
-                                          {}
-                                      left_gripper_finger2_knuckle_link:
-                                        left_gripper_finger2_finger_tip_link:
-                                          {}
-                                      left_gripper_finger3_knuckle_link:
-                                        left_gripper_finger3_finger_tip_link:
-                                          {}
-                  pan_base_link:
-                    pan_link:
-                      tilt_link:
-                        kinect2_link:
-                          kinect2_ir_link:
-                            kinect2_ir_optical_frame:
-                              {}
-                            kinect2_rgb_link:
-                              kinect2_rgb_optical_frame:
-                                {}
-                  right_base_link:
-                    right_shoulder_link:
-                      right_arm_half_1_link:
-                        right_arm_half_2_link:
-                          right_forearm_link:
-                            right_wrist_spherical_1_link:
-                              right_wrist_spherical_2_link:
-                                right_wrist_3_link:
-                                  right_ee_link:
-                                    right_gripper_base_link:
-                                      right_gripper_finger1_knuckle_link:
-                                        right_gripper_finger1_finger_tip_link:
-                                          {}
-                                      right_gripper_finger2_knuckle_link:
-                                        right_gripper_finger2_finger_tip_link:
-                                          {}
-                                      right_gripper_finger3_knuckle_link:
-                                        right_gripper_finger3_finger_tip_link:
-                                          {}
-                  upper_body_link:
-                    {}
-              lower_body_link:
-                {}
-              mid_body_link:
-                {}
-              rear_laser_link:
-                {}
-              sic_imu_frame:
-                {}
+        {}
       Update Interval: 0
+      Value: false
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: RGB8
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: PointCloud2
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.01
+      Style: Flat Squares
+      Topic: /kinect2/sd/points
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
       Value: true
   Enabled: true
   Global Options:
@@ -532,7 +391,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 3.3558
+      Distance: 7.16604
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
@@ -544,10 +403,10 @@ Visualization Manager:
         Z: 0.514248
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.659797
+      Pitch: 0.669797
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 6.01857
+      Yaw: 5.21857
     Saved: ~
 Window Geometry:
   Displays:
@@ -567,5 +426,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1887
-  X: 1942
-  Y: 1082
+  X: 1932
+  Y: 1072
