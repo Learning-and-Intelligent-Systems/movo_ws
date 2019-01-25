@@ -4,6 +4,7 @@
      <include file="$(find movo_gazebo)/launch/movo.launch">
          <arg name="gui" value="false"/>
      </include>
+
      
     <!-- Bring up an rviz window -->
     <node pkg="si_utils" type="timed_roslaunch"
