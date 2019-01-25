@@ -41,7 +41,7 @@ def start():
     global pub, sub, cfg_cmd, cfg_pub
     cfg_cmd = ConfigCmd()
     cfg_pub = rospy.Publisher('/movo/gp_command', ConfigCmd, queue_size=10)
-    pub = rospy.Publisher('/movo/cmd_vel', Twist, queue_size=10)
+    pub = rospy.Publisher('/movo/teleop/cmd_vel', Twist, queue_size=10)
     sub = rospy.Subscriber("joy", Joy, callback, queue_size=10)
     rospy.spin()
 
