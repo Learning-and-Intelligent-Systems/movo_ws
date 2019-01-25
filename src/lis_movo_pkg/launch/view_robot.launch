@@ -2,5 +2,5 @@
 
 <launch>
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find lis_movo_pkg)/launch/lis.rviz" output="screen"/>
-
+  <!--   <node name="movo_dashboard" pkg="movo_dashboard" type="movo_dashboard" output="screen"/> -->
 </launch>
