@@ -5,7 +5,7 @@ This git project is a catkin workspace.
 
 In this directory use:
 ```
-catkin make 
+catkin_make 
 
 source ~/.bashrc 
 source devel/setup.bash
