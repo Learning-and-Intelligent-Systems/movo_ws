@@ -1,6 +1,8 @@
-#!/usr/env/bin python
+#!/usr/bin/env python
 # Author: Silvia Knappe
 # Control movo with keyboard teleop, adapted from ROS teleop_twist_keyboard.py
+
+#TODO Add instructions "wasd to move" etc
 
 import rospy
 
@@ -9,6 +11,24 @@ from movo.system_defines import TRACTOR_REQUEST
 from movo_msgs.msg import ConfigCmd
 
 import sys, select, termios, tty
+
+msg = """
+Use the keyboard to move around!
+--------------------------------
+        W
+    A       S
+        D
+
+    to translate
+    ------------
+
+    Q       E
+
+    to rotate
+--------------------------------
+"""
+
+print msg
 
 moves = {
     'w':[1,0,0],
