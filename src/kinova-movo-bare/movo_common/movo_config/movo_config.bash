@@ -113,6 +113,14 @@ if [ $(hostname) = MOVO1 ]; then
 #else
 fi
 
+alias sws='source ~/movo_ws/devel/setup.bash'
+alias clean_backups='find ./ -name '*~' | xargs rm'
+alias clean_pyc='find ./ -name '*.pyc' | xargs rm'
+alias clean_rosbuild='rm -rf build devel install'
+alias fixgvfs='sudo umount /home/movo/.gvfs && rm -rf /home/movo/.gvfs'
+alias movostop='sudo movo-core-stop'
+alias movostart='sudo movo-core-start'
+alias movochk='sudo tail /var/log/upstart/movo-core.log -n 30'
 
 
 

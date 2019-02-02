@@ -92,8 +92,8 @@ class Upstart(Generic):
             # Share a single instance of the empy interpreter.
             self.interpreter = em.Interpreter(globals=self.job.__dict__.copy())
 
-            self.installation_files[os.path.join(self.root, "etc/init", self.job.name + ".conf")] = {
-                "content": self._fill_template("templates/job.conf.em"), "mode": 0o644}
+            #self.installation_files[os.path.join(self.root, "etc/init", self.job.name + ".conf")] = {
+            #    "content": self._fill_template("templates/job.conf.em"), "mode": 0o644}
             self.installation_files[os.path.join(self.root, "usr/sbin", self.job.name + "-start")] = {
                 "content": self._fill_template("templates/%s"%job_start_file), "mode": 0o755}
             self.installation_files[os.path.join(self.root, "usr/sbin", self.job.name + "-stop")] = {

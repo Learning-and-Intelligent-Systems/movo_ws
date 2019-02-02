@@ -1,7 +1,16 @@
 <!-- Launch file for Stanley Innovation enabled Movo1 PC startup -->
 
 <launch>
+
+    <arg name="perception" default="true"/>
+    <arg name="teleop" default="false"/>
+
     <!-- ROS Driver, Robot State Publisher, and sensors -->
-    <include file="$(find movo_bringup)/launch/movo1.launch"/>
-    <include file="$(find movo_bringup)/launch/movo2.launch"/>      
+    <include file="$(find movo_bringup)/launch/movo1.launch">
+        <arg name="teleop" type="bool" value="$(arg teleop)"/>
+    </include>
+
+    <include file="$(find movo_bringup)/launch/movo2.launch">
+        <arg name="perception" type="bool" value="$(arg perception)"/>
+    </include>
 </launch>
