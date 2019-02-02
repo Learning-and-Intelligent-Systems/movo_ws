@@ -172,7 +172,7 @@ class UberController:
                 self.clients[client].send_goal(goal)
         else:
             self.clients[client].send_goal(goal)
-            rospy.sleep(.1)
+            rospy.sleep(.05)
             rospy.loginfo("command sent to %s client" % client)
             status = 0
             if blocking: #XXX why isn't this perfect?
