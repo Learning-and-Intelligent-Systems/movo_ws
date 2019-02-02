@@ -34,6 +34,7 @@ function log() {
 }
 
 log info "@(name): Using workspace setup file @(workspace_setup)"
+source /opt/ros/indigo/setup.bash
 source @(workspace_setup)
 JOB_FOLDER=@(job_path)
 
@@ -176,13 +177,14 @@ else
   echo "Successfully pinged LASER2 at $MOVO_LASER2_IP." 
 fi
 
-echo Delaying 5 seconds....
-sleep 5
+echo Delaying 2 seconds....
+sleep 2
 
 # Punch it.
 export ROS_HOME=$(echo ~@(user))/.ros
 export ROS_LOG_DIR=$log_path
-setuidgid @(user) roslaunch $LAUNCH_FILENAME @(roslaunch_wait?'--wait ')&
+setuidgid $USER roslaunch $LAUNCH_FILENAME @(roslaunch_wait?'--wait ')&
+#setuidgid @(user) roslaunch $LAUNCH_FILENAME @(roslaunch_wait?'--wait ')&
 PID=$!
 
 log info "@(name): Started roslaunch as background process, PID $PID, ROS_LOG_DIR=$ROS_LOG_DIR"
