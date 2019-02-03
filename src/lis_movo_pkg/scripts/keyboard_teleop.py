@@ -16,8 +16,8 @@ msg = """
 Use the keyboard to move around!
 --------------------------------
         W
-    A       S
-        D
+    A       D
+        S
 
     to translate
     ------------
