@@ -25,6 +25,11 @@ class Echo:
                 PointCloud2, self.cb, queue_size=1)
         self.pub = rospy.Publisher("~echo_image",\
                 PointCloud2, queue_size=1)
+        self.tablepub = rospy.Publisher("table",\
+                PointCloud2, queue_size=1)
+        self.nottablepub = rospy.Publisher("tablenot",\
+                PointCloud2, queue_size=1)
+
         rospy.loginfo("[%s] Initialized." %(self.node_name))
         
 
@@ -54,18 +59,40 @@ class Echo:
         seg = cloud_filtered.make_segmenter_normals(ksearch=50)
         seg.set_optimize_coefficients(True)
         seg.set_model_type(pcl.SACMODEL_NORMAL_PLANE)
-        seg.set_normal_distance_weight(0.1)
+        seg.set_normal_distance_weight(0.05)
         seg.set_method_type(pcl.SAC_RANSAC)
-        seg.set_max_iterations(100)
+        seg.set_max_iterations(300)
         seg.set_distance_threshold(0.03)
         indices, model = seg.segment()
 
         print(model)
 
         cloud_plane = cloud_filtered.extract(indices, negative=False)
-        
         new_msg = self.pclToMsg(cloud_plane)
+        self.tablepub.publish(new_msg)
+
+
+        cloud_cyl = cloud_filtered.extract(indices, negative=True)
+        new_msg = self.pclToMsg(cloud_cyl)
+        self.nottablepub.publish(new_msg)
+
+        seg = cloud_cyl.make_segmenter_normals(ksearch=50)
+        seg.set_optimize_coefficients(True)
+        seg.set_model_type(pcl.SACMODEL_PLANE)
+        seg.set_normal_distance_weight(0.1)
+        seg.set_method_type(pcl.SAC_RANSAC)
+        seg.set_max_iterations(10000)
+        seg.set_distance_threshold(0.05)
+        #seg.set_radius_limits(0, 0.5)
+        indices, model = seg.segment()
+
+        print(model)
+
+        cloud_cylinder = cloud_cyl.extract(indices, negative=False)
+        new_msg = self.pclToMsg(cloud_cylinder)
         self.pub.publish(new_msg)
+
+
         self.thread_lock.release()
 
 
