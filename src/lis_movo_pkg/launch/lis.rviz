@@ -11,6 +11,7 @@ Panels:
         - /TF1
         - /TF1/Frames1
         - /TF1/Tree1
+        - /PointCloud21
         - /Camera1
         - /Camera1/Visibility1
       Splitter Ratio: 0.588933
@@ -372,18 +373,18 @@ Visualization Manager:
     - Class: rviz/Camera
       Enabled: true
       Image Rendering: background and overlay
-      Image Topic: /kinect2/hd/image_color_rect
+      Image Topic: /kinect2/sd/image_color_rect
       Name: Camera
       Overlay Alpha: 0.5
       Queue Size: 2
-      Transport Hint: raw
+      Transport Hint: compressed
       Unreliable: false
       Value: true
       Visibility:
         Grid: false
         Image: true
         InteractiveMarkers: true
-        PointCloud2: false
+        PointCloud2: true
         RobotModel: true
         TF: true
         Value: true
@@ -458,5 +459,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1887
-  X: 1912
-  Y: 863
+  X: 1902
+  Y: 853

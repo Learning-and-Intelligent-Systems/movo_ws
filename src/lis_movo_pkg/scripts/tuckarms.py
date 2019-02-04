@@ -28,10 +28,21 @@ class MovoUpperBody:
         "pan_joint",
         "tilt_joint"]
 
-    homed = [-1.5,-0.2,-0.175,-2.0,2.0,-1.24,-1.1, \
-            1.5,0.2,0.15,2.0,-2.0,1.24,1.1,0.35,0,0]
-    tucked = [-1.6,-1.4,0.4,-2.7,0.0,0.5,-1.7, 1.6,1.4,\
-            -0.4,2.7,0.0,-0.5, 1.7, 0.04, 0, 0]
+    homed = [
+                -1.5,-0.2,-0.175,-2.0,2.0,-1.24,-1.1, \
+                1.5,0.2,0.15,2.0,-2.0,1.24,1.1,\
+                0.35,0,0
+                ]
+    tucked = [
+                -1.6,-1.4,0.4,-2.7,0.0,0.5,-1.7,\
+                1.6,1.4,-0.4,2.7,0.0,-0.5, 1.7, 
+                0.04, 0, 0]
+    sidearms = [
+            -0.3 , -1.7 ,0.0 ,-1.7 ,1.8 ,-1.8 ,-1.1, \
+            0.3 , 1.7 ,0.0 ,1.7 ,-1.8 ,1.8 ,1.1 ,\
+            .35, 0, -1]
+
+            
 
 
     gripper_closed = 0.01
@@ -44,31 +55,33 @@ class MovoUpperBody:
         self.rgripper = GripperActionClient('right')
 
 
+    def move(self, pose):
+        success=False
+	while not rospy.is_shutdown() and not success:	
+	    result = self.move_group.moveToJointPosition(\
+                    self.upper_body_joints, pose, 0.05)
+            if result.error_code.val == MoveItErrorCodes.SUCCESS:
+                    success = True
+            else:
+                    rospy.logerr("moveToJointPosition failed (%d)"\
+                            %result.error_code.val)
+
 
     def untuck(self):
         rospy.loginfo("untucking the arms")
 
         self.lgripper.command(self.gripper_open)
 	self.rgripper.command(self.gripper_open)
-	success=False
-	while not rospy.is_shutdown() and not success:	
-	    result = self.move_group.moveToJointPosition(\
-                    self.upper_body_joints, self.homed, 0.05)
-            if result.error_code.val == MoveItErrorCodes.SUCCESS:
-                    success = True
-            else:
-                    rospy.logerr("moveToJointPosition failed (%d)"\
-                            %result.error_code.val)
-    def tuck(self):
-	success=False
-	while not rospy.is_shutdown() and not success:
-            result = self.move_group.moveToJointPosition(\
-                    self.upper_body_joints, self.tucked, 0.05)
-            if result.error_code.val == MoveItErrorCodes.SUCCESS:
-                    success = True
+        self.move(self.homed)
 
+    def tuck(self):
+        self.move(self.tucked)
 	self.lgripper.command(self.gripper_closed)
 	self.rgripper.command(self.gripper_closed)
+
+    def side(self):
+        self.move(self.sidearms)
+
 
 if __name__ == "__main__":
     parser = ArgumentParser(description="Tuck or untuck the movo arms")
@@ -76,12 +89,18 @@ if __name__ == "__main__":
             help="untuck the arms", action='store_true')
     parser.add_argument("-t", "--tuck", \
             help="tuck the arms", action='store_true')
+    parser.add_argument("-s", "--side", \
+            help="move arms to side", action='store_true')
+
+
 
 
     args = parser.parse_args()
     
     rospy.init_node('tuckarms')
     mub = MovoUpperBody()
+    if args.side:
+        mub.side()
     if args.tuck:
         mub.tuck()
     if args.untuck:
