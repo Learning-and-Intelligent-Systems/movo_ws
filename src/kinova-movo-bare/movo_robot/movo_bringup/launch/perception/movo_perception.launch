@@ -8,11 +8,11 @@
   <arg name="fps_limit"         default="-1.0"/>
   <arg name="calib_path"        default="$(find kinect2_bridge)/data/"/>
   <arg name="use_png"           default="false"/>
-  <arg name="jpeg_quality"      default="90"/>
+  <arg name="jpeg_quality"      default="100"/>
   <arg name="png_level"         default="1"/>
   <arg name="depth_method"      default="opencl"/>
   <arg name="depth_device"      default="-1"/>
-  <arg name="reg_method"        default="cpu"/>
+  <arg name="reg_method"        default="opencl"/>
   <arg name="reg_device"        default="-1"/>
   <arg name="max_depth"         default="12.0"/>
   <arg name="min_depth"         default="0.1"/>
@@ -56,7 +56,7 @@
     <param name="worker_threads"    type="int"    value="$(arg worker_threads)"/>
   </node>
 
-  <!-- Node version of kinect2_bridge -->
+  <!-- Node version of kinect2_bridge 
   <node pkg="kinect2_bridge" type="kinect2_bridge" name="$(arg base_name)_bridge" 
         respawn="$(arg respawn)" output="$(arg output)" unless="$(arg use_nodelet)">
     <param name="base_name"         type="str"    value="$(arg base_name)"/>
@@ -79,7 +79,7 @@
     <param name="edge_aware_filter" type="bool"   value="$(arg edge_aware_filter)"/>
     <param name="worker_threads"    type="int"    value="$(arg worker_threads)"/>
   </node>
-
+  -->
   <!-- sd point cloud (512 x 424) -->
   <node pkg="nodelet" type="nodelet" name="$(arg base_name)_points_xyzrgb_sd" 
         args="load depth_image_proc/point_cloud_xyzrgb $(arg nodelet_manager)" respawn="$(arg respawn)">
@@ -90,7 +90,7 @@
     <param name="queue_size" type="int" value="$(arg queue_size)"/>
   </node>
 
-  <!-- qhd point cloud (960 x 540) -->
+  <!-- qhd point cloud (960 x 540) 
   <node pkg="nodelet" type="nodelet" name="$(arg base_name)_points_xyzrgb_qhd" 
         args="load depth_image_proc/point_cloud_xyzrgb $(arg nodelet_manager)" respawn="$(arg respawn)">
     <remap from="rgb/camera_info"             to="$(arg base_name)/qhd/camera_info"/>
@@ -99,8 +99,9 @@
     <remap from="depth_registered/points"     to="$(arg base_name)/qhd/points"/>
     <param name="queue_size" type="int" value="$(arg queue_size)"/>
   </node>
+  -->
 
-  <!-- hd point cloud (1920 x 1080) -->
+  <!-- hd point cloud (1920 x 1080)-->
   <node pkg="nodelet" type="nodelet" name="$(arg base_name)_points_xyzrgb_hd" 
         args="load depth_image_proc/point_cloud_xyzrgb $(arg nodelet_manager)" respawn="$(arg respawn)">
     <remap from="rgb/camera_info"             to="$(arg base_name)/hd/camera_info"/>
@@ -108,5 +109,5 @@
     <remap from="depth_registered/image_rect" to="$(arg base_name)/hd/image_depth_rect"/>
     <remap from="depth_registered/points"     to="$(arg base_name)/hd/points"/>
     <param name="queue_size" type="int" value="$(arg queue_size)"/>
-  </node>
-</launch>
+</node> 
+</launch> 
