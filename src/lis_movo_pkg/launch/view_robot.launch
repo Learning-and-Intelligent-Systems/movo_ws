@@ -2,5 +2,7 @@
 
 <launch>
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find lis_movo_pkg)/launch/lis.rviz" output="screen"/>
+  <node name="headpointer" pkg="lis_movo_pkg" type="point_head.py" output="screen"/>
+  <node name="markerinteract" pkg="lis_movo_pkg" type="rviz_markers.py" output="screen"/>
   <node name="movo_dashboard" pkg="rqt_gui" type="rqt_gui" args="-s movo_dashboard" output="screen"/> 
 </launch>
