@@ -17,7 +17,7 @@
     <node respawn="true" pkg="joy" type="joy_node" name="turtle_joy" >
         <param name="dev" type="string" value="/dev/input/js0" />
         <param name="deadzone" value="0.1" />
-        <param name="autorepeat_rate" type="double" value="40" />
+        <param name="autorepeat_rate" type="double" value="60" />
     </node>
 
     <!-- Start teleop -->
