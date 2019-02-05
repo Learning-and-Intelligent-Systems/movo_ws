@@ -9,10 +9,9 @@ class CartVel:
                 JacoCartesianVelocityCmd, queue_size=1)
         self.rate = rospy.Rate(50)
 
-    def sendCmd(self, frame_id,  (x,y,z), (roll,pitch,yaw), time):
+    def sendCmd(self, (x,y,z), (roll,pitch,yaw), time):
         cmd = JacoCartesianVelocityCmd()
         cmd.header.stamp = rospy.Time.now()
-        cmd.header.frame_id = frame_id
         cmd.x= x
         cmd.y = y
         cmd.z = z
@@ -31,7 +30,7 @@ class CartVel:
         rospy.loginfo( "Done!")
 
     def translate(self, x,y,z):
-        self.sendCmd('base_link', (x,y,z), (0,0,0), .1)
+        self.sendCmd((x,y,z), (0,0,0), .1)
 
 
 
