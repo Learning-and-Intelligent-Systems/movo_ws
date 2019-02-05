@@ -21,14 +21,6 @@ def setGP():
 
 
 def callback(joy):
-    #cfg_cmd.gp_cmd = 'GENERAL_PURPOSE_CMD_SET_OPERATIONAL_MODE'
-    #cfg_cmd.gp_param = TRACTOR_REQUEST
-    #cfg_cmd.header.stamp = rospy.get_rostime()
-
-    #cfg_pub.publish(cfg_cmd)
-
-    #rospy.sleep(0.1)
-    
     twist = Twist()
 
     # Button mapping
@@ -39,7 +31,7 @@ def callback(joy):
 
     # Use left trigger as deadman: actions only happen if trigger pressed down
     if deadman < -0.5:
-        d = 3
+        d = 2
     else:
         d = 0
 
