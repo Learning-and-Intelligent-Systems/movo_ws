@@ -51,19 +51,20 @@ import datetime as dt
 def say(_pub, _data):
     voice_cmd = String()
     voice_cmd.data = _data
+    print _data
     _pub.publish(voice_cmd)
 
 if __name__ == "__main__":
 
     process_start_time = dt.datetime.now()
     rospy.init_node("demo_show_basic")
-    dof = rospy.get_param('~jaco_dof')
+    dof = "7dof" #rospy.get_param('~jaco_dof', 7)
     sim = rospy.get_param("~sim", False)
     if (sim):
         rospy.wait_for_message('/sim_initialized',Bool)
 
     movo_head = HeadActionClient()
-    movo_base = MoveBaseActionClient(sim=sim, frame="odom")
+    #movo_base = MoveBaseActionClient(sim=sim, frame="odom")
     movo_larm = JacoActionClient(arm='left', dof=dof)
     movo_rarm = JacoActionClient(arm='right', dof=dof)
     movo_lfinger = GripperActionClient('left')
@@ -128,14 +129,14 @@ if __name__ == "__main__":
     1. Greeting words
     """
     say(Publisher, "Hello there. My name is MOVO. "
-                   "Welcome to IROS. You can get to know me, and all I can do, over the next minute and a half. ")
+                   "Welcome to Emboddied Intelligence. You can get to know me, and all I can do, over the next minute and a half. ")
     rospy.sleep(1)
     movo_lfinger.command(0.165)
     movo_rfinger.command(0.165)
     movo_lfinger.wait(3)
     movo_rfinger.wait(3)
-    movo_larm.clear('left')
-    movo_rarm.clear('right')
+    movo_larm.clear()
+    movo_rarm.clear()
     tmp_left = rospy.wait_for_message("/movo/left_arm/joint_states", JointState)
     current_larm_pos = list(tmp_left.position)
     tmp_right = rospy.wait_for_message("/movo/right_arm/joint_states", JointState)
@@ -159,6 +160,7 @@ if __name__ == "__main__":
     # 2. Feature Motion
     # """
     # Movo base motion
+    """
     say(Publisher, "I can move all over the place. Forward... and backward... and to the side. "
                    "Do I look like Michael Jackson? ")
     target = Pose2D(x=0.2, y=0.0, theta=0.0)
@@ -188,6 +190,7 @@ if __name__ == "__main__":
     target = Pose2D(x=0.0, y=0.0, theta=0.0)
     movo_base.goto(target)
     print "Movo Completing Base Motion"
+    """
 
     # Torso motion
     say(Publisher, "There are certain advantages to being a robot. We do not have to worry about being too tall or too short. "
@@ -210,11 +213,10 @@ if __name__ == "__main__":
                        "Please join my BETA program and help me to be the best I-can be. ")
     if '7dof' == dof:
         say(Publisher, "Thanks to seven degrees of freedom, I can move my arms in many ways. "
-                       "It is very helpful for all sorts of tasks. And I run on open source, open architecture. I am ROS enabled. "
-                       "Please join my BETA program and help me to be the best I-can be. ")
+                       "It is very helpful for all sorts of tasks. And I run on open source, open architecture. I am ROS enabled. ")
 
-    movo_larm.clear('left')
-    movo_rarm.clear('right')
+    movo_larm.clear()
+    movo_rarm.clear()
     tmp_left = rospy.wait_for_message("/movo/left_arm/joint_states", JointState)
     tmp_right = rospy.wait_for_message("/movo/right_arm/joint_states", JointState)
     current_larm_pos = list(tmp_left.position)
@@ -294,12 +296,10 @@ if __name__ == "__main__":
     movo_lfinger.wait(3)
     movo_rfinger.wait(3)
 
-    say(Publisher, "If you would like to participate in my BETA phase, talk to the guys at the booth "
-                   "or visit KinovaMOVO.com for more details. "
-                   "Remember my name MOVO. You will be hearing a lot about me in the future. I love you guys. ")
+    say(Publisher, "Remember my name MOVO. You will be hearing a lot about me in the future. I love you guys. ")
 
-    movo_larm.clear('left')
-    movo_rarm.clear('right')
+    movo_larm.clear()
+    movo_rarm.clear()
     tmp_left = rospy.wait_for_message("/movo/left_arm/joint_states", JointState)
     current_larm_pos = list(tmp_left.position)
     tmp_right = rospy.wait_for_message("/movo/right_arm/joint_states", JointState)
@@ -337,14 +337,14 @@ if __name__ == "__main__":
     # Return to Home pose to prepare loop
     rospy.sleep(1)
 
-    say(Publisher, "Now, please allow me to take some rest. I will be back with you in 5 minutes. Good bye. ")
+    say(Publisher, "Now, please allow me to take some rest.  Good bye. ")
     movo_lfinger.command(0.0)
     movo_rfinger.command(0.0)
     movo_lfinger.wait(3)
     movo_rfinger.wait(3)
 
-    movo_larm.clear('left')
-    movo_rarm.clear('right')
+    movo_larm.clear()
+    movo_rarm.clear()
     tmp_left = rospy.wait_for_message("/movo/left_arm/joint_states", JointState)
     current_larm_pos = list(tmp_left.position)
     tmp_right = rospy.wait_for_message("/movo/right_arm/joint_states", JointState)
