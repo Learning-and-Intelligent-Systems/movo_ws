@@ -49,7 +49,8 @@ from trajectory_msgs.msg import (
 )
 
 class JacoActionClient(object):
-    def __init__(self, arm='right', dof=''):
+    def __init__(self, arm='right', dof='7'):
+        dof = '7'
         if ''==dof:
             rospy.logerr('DoF parameter needs to be set 6 or 7')
             return
@@ -63,7 +64,7 @@ class JacoActionClient(object):
         self._goal = FollowJointTrajectoryGoal()
         self._goal_time_tolerance = rospy.Time(0.1)
         self._goal.goal_time_tolerance = self._goal_time_tolerance
-        self.dof = dof
+        self.dof = "7dof"
         server_up = self._client.wait_for_server(timeout=rospy.Duration(10.0))
         if not server_up:
             rospy.logerr("Timed out waiting for Joint Trajectory"
