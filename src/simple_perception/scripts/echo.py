@@ -11,6 +11,9 @@ import threading
 import ros_numpy
 from tf2_ros import TransformStamped, TransformListener, Buffer
 import tf2_sensor_msgs
+from moveit_msgs.msg import CollisionObject
+from shape_msgs.msg import SolidPrimitive
+
 from simple_perception.pcl_helper import ( \
         ros_to_pcl, 
         pcl_to_ros,
@@ -42,6 +45,8 @@ class Echo:
         
         self.planepub = rospy.Publisher("mytable", \
                 PolygonStamped, queue_size=1)
+        self.pub_collision = rospy.Publisher("/collision_object", CollisionObject, queue_size=1, latch=True)
+
         
         self.detsrv = rospy.ServiceProxy('/detect_models_soda',\
                 DetectModels)
@@ -53,7 +58,6 @@ class Echo:
         print "listening to transforms!"
         while not rospy.is_shutdown():
             self.r.sleep()
-            #trans = self.buff.lookup_transform('kinect2_ir_optical_frame', 'base_link', rospy.Time())
             try:
                 self.trans = self.buff.lookup_transform('base_link', 'kinect2_ir_optical_frame', rospy.Time())
                 self.T =  tf2_sensor_msgs.transform_to_kdl(self.trans) 
@@ -88,27 +92,19 @@ class Echo:
         seg = cloud.make_segmenter_normals(ksearch=50)
         seg.set_optimize_coefficients(True)
         seg.set_model_type(pcl.SACMODEL_NORMAL_PLANE)
-        seg.set_normal_distance_weight(0.03)
         seg.set_method_type(pcl.SAC_RANSAC)
-        seg.set_max_iterations(300)
-        seg.set_distance_threshold(0.03)
+        seg.set_distance_threshold(0.05)
         indices, model = seg.segment()
-        
         cloud_plane = cloud.extract(indices, negative=False)
+        
         chull = cloud_plane.make_ConcaveHull()
-        chull.set_Alpha(0.1)
+        chull.set_Alpha(1.3)
         cloud_plane = chull.reconstruct()
 
-        #proj = cloud_plane.make_ProjectInliers()
-        #proj.set_model_type (pcl.SACMODEL_PLANE)
-        #cloud_plane = proj.filter()
-
-
+        
         points = [Point(p[0], p[1], p[2]) for p in np.asarray(cloud_plane)]
         poly=Polygon()
         poly.points = points
-        ps = PolygonStamped(self.lastHeader, poly)
-        self.planepub.publish(ps)
 
 
         return indices, cloud_plane, poly
@@ -134,9 +130,8 @@ class Echo:
         detreq = DetectModelsRequest()
         detreq.models = ["soda"]
         
-        detreq.max_dists_xy = [2]
-        detreq.max_dists_z = [2]
-        #import pdb; pdb.set_trace()
+        detreq.max_dists_xy = [3]
+        detreq.max_dists_z = [3]
 
         for i in range(3):
             indices, cloud_plane, poly = self.getPlanePoints(cloud_filtered)
@@ -145,9 +140,43 @@ class Echo:
             self.tablepub.publish(new_msg)
             new_msg = self.pclToMsg(cloud_filtered)
             self.nottablepub.publish(new_msg)
-
             detreq.surface_polygons.append(poly)
-            #raw_input("next plane")
+            
+            
+            pts = np.asarray(cloud_plane)
+            dx,dy,dz = np.max(pts,axis=0) - np.min(pts, axis=0)
+            max_x, max_y, max_z = np.max(pts, axis=0)
+            min_x, min_y, min_z = np.min(pts, axis=0)
+            if dz > 1 or max_z < 0.3:
+                # not a table-- is a wall
+                # or table is the floor
+                continue
+            else:
+                ps = PolygonStamped(self.lastHeader, poly)
+                self.planepub.publish(ps)
+                collision_object = CollisionObject()
+                collision_object.id = "table"
+                collision_object.header = self.lastHeader
+                object_shape = SolidPrimitive()
+                object_shape.type = SolidPrimitive.BOX
+                object_shape.dimensions.append(dx)
+                object_shape.dimensions.append(dy)
+                object_shape.dimensions.append(max_z)
+                collision_object.primitives.append(object_shape)
+                shape_pose = Pose()
+                shape_pose.position.x = min_x  + dx/2
+                shape_pose.position.y = min_y  + dy/2
+                shape_pose.position.z = max_z/2
+                shape_pose.orientation.w = 1.0
+                collision_object.primitive_poses.append(shape_pose)
+                collision_object.operation = CollisionObject.ADD
+                self.pub_collision.publish(collision_object)
+
+
+
+                collision_object.primitives.append(object_shape)
+
+
 
         tmp_pose = Pose()
         tmp_pose.orientation.x = 1
@@ -157,7 +186,6 @@ class Echo:
         detreq.timeout = rospy.Duration(5)
         detreq.initial_poses = [Pose()]
 
-        #detreq.header.frame_id = "base_link"
         try:
             result = self.detsrv.call(detreq)
             print "success!"
