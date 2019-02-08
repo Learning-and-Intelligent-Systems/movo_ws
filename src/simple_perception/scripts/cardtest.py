@@ -114,7 +114,7 @@ class Echo:
         
         detreq.max_dists_xy = [2]
         detreq.max_dists_z = [2]
-
+        import pdb; pdb.set_trace()
         for wall in result.walls:
 
             poly = Polygon()

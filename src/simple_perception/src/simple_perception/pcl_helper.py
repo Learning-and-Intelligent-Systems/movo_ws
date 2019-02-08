@@ -36,7 +36,7 @@ def random_color_gen():
     return [r, g, b]
 
 
-def ros_to_pcl(ros_cloud):
+def ros_to_pcl(ros_cloud, skip_nans=False):
     """ Converts a ROS PointCloud2 message to a pcl PointXYZRGB
 
         Args:
@@ -47,7 +47,7 @@ def ros_to_pcl(ros_cloud):
     """
     points_list = []
 
-    for data in pc2.read_points(ros_cloud): #, skip_nans=True):
+    for data in pc2.read_points(ros_cloud, skip_nans=skip_nans): #, skip_nans=True):
         points_list.append([data[0], data[1], data[2], data[3]])
 
     pcl_data = pcl.PointCloud_PointXYZRGB()
