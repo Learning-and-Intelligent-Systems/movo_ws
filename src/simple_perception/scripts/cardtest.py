@@ -8,10 +8,11 @@ import numpy as np
 import threading
 import ros_numpy
 from cardb.srv import SegmentScene, SegmentSceneRequest, DetectModels, DetectModelsRequest
-from geometry_msgs.msg import Point, Polygon, PolygonStamped
+from geometry_msgs.msg import Point, Polygon, PolygonStamped, Pose
 from chull_helper import CHull
 from tf2_ros import TransformStamped, TransformListener, Buffer
 import tf2_sensor_msgs
+import PyKDL
 
 
 from simple_perception.pcl_helper import ( \
@@ -42,8 +43,8 @@ class Echo:
         self.tablepub = rospy.Publisher("mytable", \
                 PolygonStamped, queue_size=1)
 
-        #self.pub = rospy.Publisher("~echo_image",\
-        #        PointCloud2, queue_size=1)
+        self.pub = rospy.Publisher("~echo_image",\
+                PointCloud2, queue_size=1)
         #self.tablepub = rospy.Publisher("table",\
         #        PointCloud2, queue_size=1)
         #self.nottablepub = rospy.Publisher("tablenot",\
@@ -53,11 +54,14 @@ class Echo:
         
     def latestTransform(self):
         print "listening to transforms!"
+        self.r.sleep()
         while not rospy.is_shutdown():
             self.r.sleep()
             #trans = self.buff.lookup_transform('kinect2_ir_optical_frame', 'base_link', rospy.Time())
             try:
-                self.trans = self.buff.lookup_transform('kinect2_ir_optical_frame', 'base_link', rospy.Time())
+                self.trans = self.buff.lookup_transform('base_link', 'kinect2_ir_optical_frame', rospy.Time())
+                self.T =  tf2_sensor_msgs.transform_to_kdl(self.trans) 
+
             except:
                 print "lookup error"
             
@@ -80,18 +84,21 @@ class Echo:
     def process(self, msg):
         if not self.thread_lock.acquire(False):
             return
-        msg = tf2_sensor_msgs.do_transform_cloud(msg, self.trans)
+        #msg = tf2_sensor_msgs.do_transform_cloud(msg, self.trans)
+        #msg.header.frame_id = "base_link"
+        #self.pub.publish(msg)
+
         pc = ros_to_pcl(msg) 
         pc = XYZRGB_to_XYZ(pc)
         req = SegmentSceneRequest()
-        req.dist_threshold = 0.03
+        req.dist_threshold = 0.07
         req.angle_threshold = 0.1
-        req.plane_dist_threshold = 0.02
+        req.plane_dist_threshold = 0.05
         req.min_plane_size =  .25
-        req.max_floor_height= 1.0
-        req.cluster_tolerance= 0.05
+        req.max_floor_height= 5.
+        req.cluster_tolerance= 0.09
         req.min_cluster_size= 0.05
-        req.max_cluster_size= 1
+        req.max_cluster_size= 10
 
 
         pts  = np.asarray(pc).tolist()
@@ -104,27 +111,50 @@ class Echo:
         
         detreq = DetectModelsRequest()
         detreq.models = ["soda"]
-        detreq.max_dists_xy = [1]
-        detreq.max_dists_z = [1]
+        
+        detreq.max_dists_xy = [2]
+        detreq.max_dists_z = [2]
 
         for wall in result.walls:
+
             poly = Polygon()
 
-            points = [(p.x, p.y, p.z) for p in wall.points]
+            pointsvect = [self.T*PyKDL.Vector(p.x, p.y, p.z) for p in wall.points]
+            points = np.array([[p[0], p[1], p[2]] for p in pointsvect])
+            #import pdb; pdb.set_trace()
             try:
                 ch = CHull(points)
             except:
                 continue
             max_x, max_y, max_z = ch.max_pts()
-            if max_z > 5: continue
+            min_x, min_y, min_z = ch.min_pts()
+            #if min_z < 0: continue
 
-            ch_pts = [ Point(x,y,z) for (x,y,z) in ch.get_vertices()]
+            avg_z = np.mean(points, axis=0)[2]
+            ch_xy = CHull(points[:,:2])
+
+
+            #surf_pts = [self.T.Inverse()*PyKDL.Vector(x, y, avg_z) for (x,y) in ch_xy.get_vertices()]
+            #ch_pts = [Point(p[0], p[1], p[2]) for p in surf_pts]
+            
+            ch_pts = [ Point(x,y,avg_z) for (x,y) in ch_xy.get_vertices()]
+            
 
             poly.points = ch_pts
             detreq.surface_polygons.append(poly)
             ps = PolygonStamped(self.lastHeader, poly)
+            ps.header.frame_id="base_link"
             self.tablepub.publish(ps)
+
+        tmp_pose = Pose()
+        tmp_pose.orientation.x = 1
+        detreq.initial_poses = [tmp_pose]
+
         detreq.header = self.lastHeader
+        detreq.timeout = rospy.Duration(5)
+        detreq.initial_poses = [Pose()]
+
+        detreq.header.frame_id = "base_link"
         try:
             result = self.detsrv.call(detreq)
             print "success!"
