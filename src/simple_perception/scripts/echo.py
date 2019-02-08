@@ -93,12 +93,12 @@ class Echo:
         seg.set_optimize_coefficients(True)
         seg.set_model_type(pcl.SACMODEL_NORMAL_PLANE)
         seg.set_method_type(pcl.SAC_RANSAC)
-        seg.set_distance_threshold(0.05)
+        seg.set_distance_threshold(0.03)
         indices, model = seg.segment()
         cloud_plane = cloud.extract(indices, negative=False)
         
         chull = cloud_plane.make_ConcaveHull()
-        chull.set_Alpha(1.3)
+        chull.set_Alpha(1.)
         cloud_plane = chull.reconstruct()
 
         
@@ -108,6 +108,58 @@ class Echo:
 
 
         return indices, cloud_plane, poly
+
+    def publishResults(self, result):
+        for i, obj in enumerate(result.scene.objects): 
+            id = "%s%d" % (obj.name, i)
+            dx,dy,dz = (0.1,)*3 # determine from model
+            collision_object = CollisionObject()
+            collision_object.id = id
+            collision_object.header = self.lastHeader
+            object_shape = SolidPrimitive()
+            object_shape.type = SolidPrimitive.BOX
+            object_shape.dimensions.append(dx)
+            object_shape.dimensions.append(dy)
+            object_shape.dimensions.append(dz)
+            collision_object.primitives.append(object_shape)
+            shape_pose = obj.pose
+            collision_object.primitive_poses.append(shape_pose)
+            collision_object.operation = CollisionObject.ADD
+            self.pub_collision.publish(collision_object)
+
+
+    def publishCO(self, points, id, is_table=False):
+        pts = np.asarray(points)
+        dx,dy,dz = np.max(pts,axis=0) - np.min(pts, axis=0)
+        max_x, max_y, max_z = np.max(pts, axis=0)
+        min_x, min_y, min_z = np.min(pts, axis=0)
+
+
+        collision_object = CollisionObject()
+        collision_object.id = id
+        collision_object.header = self.lastHeader
+        object_shape = SolidPrimitive()
+        object_shape.type = SolidPrimitive.BOX
+        object_shape.dimensions.append(dx)
+        object_shape.dimensions.append(dy)
+        shape_pose = Pose()
+        shape_pose.position.x = min_x  + dx/2
+        shape_pose.position.y = min_y  + dy/2
+        if is_table:
+            object_shape.dimensions.append(max_z)
+            shape_pose.position.z = max_z/2
+        else:
+            object_shape.dimensions.append(dz)
+            shape_pose.position.z = min_z + dz/2
+
+        shape_pose.orientation.w = 1.0
+        collision_object.primitives.append(object_shape)
+        collision_object.primitive_poses.append(shape_pose)
+        collision_object.operation = CollisionObject.ADD
+
+        self.pub_collision.publish(collision_object)
+
+
 
     def process(self, msg):
         if not self.thread_lock.acquire(False):
@@ -147,15 +199,19 @@ class Echo:
             dx,dy,dz = np.max(pts,axis=0) - np.min(pts, axis=0)
             max_x, max_y, max_z = np.max(pts, axis=0)
             min_x, min_y, min_z = np.min(pts, axis=0)
-            if dz > 1 or max_z < 0.3:
+            area = dx*dy
+            #print "area", dx*dy
+            if dz > 1 or max_z < 0.3 or area< 0.5:
                 # not a table-- is a wall
                 # or table is the floor
                 continue
             else:
                 ps = PolygonStamped(self.lastHeader, poly)
                 self.planepub.publish(ps)
+                self.publishCO(pts, "table%d"%i, is_table=True)
+                """
                 collision_object = CollisionObject()
-                collision_object.id = "table"
+                collision_object.id = "table%d"%i
                 collision_object.header = self.lastHeader
                 object_shape = SolidPrimitive()
                 object_shape.type = SolidPrimitive.BOX
@@ -171,10 +227,10 @@ class Echo:
                 collision_object.primitive_poses.append(shape_pose)
                 collision_object.operation = CollisionObject.ADD
                 self.pub_collision.publish(collision_object)
+                """
 
 
 
-                collision_object.primitives.append(object_shape)
 
 
 
@@ -188,6 +244,7 @@ class Echo:
 
         try:
             result = self.detsrv.call(detreq)
+            self.publishResults(result)
             print "success!"
             print result
         except:
