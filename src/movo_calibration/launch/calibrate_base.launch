@@ -1,0 +1,13 @@
+<launch>
+    
+  <node pkg="robot_calibration" type="calibrate_base" name="calibrate_base"
+        output="screen">
+    <rosparam file="$(find movo_calibration)/config/calibrate_base.yaml" command="load" />
+    <remap from="cmd_vel" to="/movo/cmd_vel"/>
+    <remap from="base_scan" to="/movo/scan_multi"/>
+    <remap from="odom" to="/movo/odometry/local_filtered"/>
+    <remap from="imu" to="/movo/feedback/sic_imu"/>
+  </node>
+
+
+</launch>

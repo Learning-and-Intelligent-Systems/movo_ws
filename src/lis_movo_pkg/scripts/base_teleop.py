@@ -50,8 +50,8 @@ def start():
     cfg_pub = rospy.Publisher('/movo/gp_command', ConfigCmd, queue_size=10)
 
     pub = rospy.Publisher('/movo/cmd_vel', Twist, queue_size=5)
-    sub = rospy.Subscriber("joy", Joy, callback, queue_size=1)
     threading.Thread(target=setGP)
+    sub = rospy.Subscriber("joy", Joy, callback, queue_size=1)
     rospy.spin()
 
 if __name__ == '__main__':

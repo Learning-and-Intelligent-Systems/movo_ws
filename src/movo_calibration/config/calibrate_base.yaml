@@ -1,0 +1,4 @@
+verbose: true
+min_angle: -0.5
+max_angle: 0.5
+accel_limit: 2.0
