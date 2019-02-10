@@ -1,0 +1,32 @@
+verbose: true
+base_link: linear_actuator_link
+models:
+ - name: arm
+   type: chain
+   frame: right_wrist_3_link
+ - name: camera
+   type: camera3d
+   frame: kinect2_ir_optical_frame
+   topic: /kinect2/hd/points
+free_params:
+ - tilt_joint
+free_frames:
+ - name: kinect2_joint
+   x: true
+   y: true
+   z: true
+   roll: true
+   pitch: false
+   yaw: true
+ - name: pan_joint
+   x: true
+   y: true
+   z: true
+   roll: true
+   pitch: true
+   yaw: true
+error_blocks:
+ - name: hand_eye
+   type: chain3d_to_chain3d
+   model_a: camera
+   model_b: arm

@@ -1,0 +1,28 @@
+chains:
+  - name: arm
+    topic: /movo/right_arm_controller/follow_joint_trajectory
+    joints:
+     - right_shoulder_pan_joint
+     - right_shoulder_lift_joint
+     - right_arm_half_joint
+     - right_elbow_joint
+     - right_wrist_spherical_1_joint
+     - right_wrist_spherical_2_joint
+     - right_wrist_3_joint
+    planning_group: right_arm
+  - name: head
+    topic: /movo/head_controller/follow_joint_trajectory
+    joints:
+     - pan_joint
+     - tilt_joint
+duration: 2.0
+features:
+  checkerboard_finder:
+    type: robot_calibration/CheckerboardFinder
+    topic: /kinect2/hd/points
+    camera_sensor_name: camera
+    chain_sensor_name: arm
+    camera_info_topic: /kinect2/hd/camera_info
+    points_x: 6
+    points_y: 4
+    size: 0.03

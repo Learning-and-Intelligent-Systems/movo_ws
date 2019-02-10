@@ -1,0 +1,53 @@
+verbose: true
+base_link: linear_actuator_link
+models:
+ - name: arm
+   type: chain
+   frame: right_wrist_3_link
+ - name: camera
+   type: camera3d
+   frame: kinect2_ir_optical_frame
+   topic: /kinect2/sd/points
+free_params:
+ - right_shoulder_pan_joint
+ - right_shoulder_lift_joint 
+ - right_arm_half_joint
+ - right_elbow_joint
+ - right_wrist_spherical_1_joint
+ - right_wrist_spherical_2_joint
+ - right_wrist_3_joint
+ - tilt_joint
+free_frames:
+ - name: kinect2_joint
+   x: true
+   y: true
+   z: true
+   roll: true
+   pitch: false
+   yaw: true
+ - name: pan_joint
+   x: true
+   y: true
+   z: true
+   roll: true
+   pitch: true
+   yaw: true
+ - name: checkerboard
+   x: true
+   y: false
+   z: true
+   roll: false
+   pitch: true
+   yaw: false
+error_blocks:
+ - name: hand_eye
+   type: chain3d_to_chain3d
+   model_a: camera
+   model_b: arm
+ - name: restrict_camera
+   type: outrageous
+   param: kinect2_rgb_joint
+   joint_scale: 0.0
+   position_scale: 0.1
+   rotation_scale: 0.1
+
