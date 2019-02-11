@@ -4,8 +4,8 @@
   <node pkg="robot_calibration" type="calibrate" name="robot_calibration"
         args="--manual"
         output="screen" required="true">
-    <rosparam file="$(find movo_calibration)/config/capture.yaml" command="load" />
-    <rosparam file="$(find movo_calibration)/config/calibrate.yaml" command="load" />
+    <rosparam file="$(find movo_calibration)/config/capture_checkerboards.yaml" command="load" />
+    <rosparam file="$(find movo_calibration)/config/calibrate_checkerboards.yaml" command="load" />
   </node>
 
   <node pkg="rosbag" type="record" name="calibration_bagger" output="screen"

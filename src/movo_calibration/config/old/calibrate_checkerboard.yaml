@@ -3,7 +3,7 @@ base_link: linear_actuator_link
 models:
  - name: arm
    type: chain
-   frame: right_wrist_3_link
+   frame: wrist_3_link
  - name: camera
    type: camera3d
    frame: kinect2_rgb_optical_frame

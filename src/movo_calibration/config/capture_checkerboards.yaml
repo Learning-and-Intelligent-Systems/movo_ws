@@ -23,6 +23,6 @@ features:
     camera_sensor_name: camera
     chain_sensor_name: arm
     camera_info_topic: /kinect2/hd/camera_info
-    points_x: 6
-    points_y: 4
+    points_x: 7
+    points_y: 5
     size: 0.03
