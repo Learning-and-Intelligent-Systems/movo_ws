@@ -3,7 +3,7 @@
 
     <arg name="local" default="true"/>
 
-    <machine name="movo1" address="movo1" user="movo" 
+    <machine name="movo1" address="movo1" user="ari" 
                  env-loader="/home/movo/env.sh" default="true" unless="$(arg local)"/>
          
     <!--System watchdog-->
