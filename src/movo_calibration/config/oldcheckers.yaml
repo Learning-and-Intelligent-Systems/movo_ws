@@ -9,23 +9,15 @@ models:
    frame: kinect2_rgb_optical_frame
    topic: /kinect2/hd/points
 free_params:
- - camera_fx
- - camera_fy
- - camera_cx
- - camera_cy
- - camera_z_offset
- - camera_z_scaling
  - right_shoulder_pan_joint
  - right_shoulder_lift_joint
  - right_arm_half_joint
  - right_elbow_joint
  - right_wrist_spherical_1_joint
  - right_wrist_spherical_2_joint
- - right_wrist_3_joint
- - pan_joint
- - tilt_joint
-
+ 
 free_frames:
+
  - name: checkerboard
    x: true
    y: true
@@ -38,3 +30,9 @@ error_blocks:
    type: camera3d_to_arm
    camera: camera
    arm: arm
+ - name: restrict_camera
+   type: outrageous
+   param: kinect2_rgb_joint
+   joint_scale: 0.0
+   position_scale: 0.1
+   rotation_scale: 0.1

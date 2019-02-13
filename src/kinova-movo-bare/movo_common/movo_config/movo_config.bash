@@ -120,6 +120,5 @@ alias fixgvfs='sudo umount /home/movo/.gvfs && rm -rf /home/movo/.gvfs'
 alias movostop='sudo movo-core-stop'
 alias movostart='sudo movo-core-start'
 alias movochk='sudo tail /var/log/upstart/movo-core.log -n 30'
-
-
+alias useX='export DISPLAY=localhost:12.0'
 

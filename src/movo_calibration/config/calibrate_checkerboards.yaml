@@ -8,18 +8,6 @@ models:
    type: camera3d
    frame: kinect2_rgb_optical_frame
    topic: /kinect2/hd/points
-free_params:
- - right_shoulder_pan_joint
- - right_shoulder_lift_joint
- - right_arm_half_joint
- - right_elbow_joint
- - right_wrist_spherical_1_joint
- - right_wrist_spherical_2_joint
- - right_wrist_3_joint
- - pan_joint
- - tilt_joint
- - kinect2_joint
-
 free_frames:
  - name: checkerboard
    x: true
@@ -28,8 +16,42 @@ free_frames:
    roll: true
    pitch: true
    yaw: true
+ - name: right_shoulder_pan_joint
+   x: false
+   y: false
+   z: false
+   roll: false
+   pitch: false
+   yaw: true
+ - name: right_shoulder_lift_joint
+   x: false
+   y: false
+   z: false
+   roll: false
+   pitch: false
+   yaw: true
+ - name: right_arm_half_joint
+   x: false
+   y: false
+   z: false
+   roll: false
+   pitch: false
+   yaw: true
+ - name: right_elbow_joint
+   x: false
+   y: false
+   z: false
+   roll: false
+   pitch: false
+   yaw: true
 error_blocks:
  - name: hand_eye
    type: camera3d_to_arm
    camera: camera
    arm: arm
+ - name: restrict_camera
+   type: outrageous
+   param: kinect2_joint
+   joint_scale: 0.0
+   position_scale: 0.1
+   rotation_scale: 0.1

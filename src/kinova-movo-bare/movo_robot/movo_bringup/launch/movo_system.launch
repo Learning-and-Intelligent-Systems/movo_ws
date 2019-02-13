@@ -4,6 +4,7 @@
 
     <arg name="perception" default="true"/>
     <arg name="teleop" default="false"/>
+    <arg name="moveit" default="true"/>
 
     <!-- ROS Driver, Robot State Publisher, and sensors -->
     <include file="$(find movo_bringup)/launch/movo1.launch">
@@ -12,5 +13,6 @@
 
     <include file="$(find movo_bringup)/launch/movo2.launch">
         <arg name="perception" type="bool" value="$(arg perception)"/>
+        <arg name="moveit" type="bool" value="$(arg moveit)"/>
     </include>
 </launch>
