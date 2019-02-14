@@ -47,10 +47,6 @@ class KeyboardTeleop:
         self.settings = termios.tcgetattr(sys.stdin)
 
 
-        self.v_x = 0
-        self.v_y = 0
-        self.a_z = 0
-
     def getKey(self):
 
         fd = sys.stdin.fileno()
@@ -70,32 +66,32 @@ class KeyboardTeleop:
 
     def setGP(self):
         while not rospy.is_shutdown():
-            cfg_cmd.gp_cmd = 'GENERAL_PURPOSE_CMD_SET_OPERATIONAL_MODE'
-            cfg_cmd.gp_param = TRACTOR_REQUEST
-            cfg_cmd.header.stamp = rospy.get_rostime()
-            cfg_pub.publish(cfg_cmd)
-            r.sleep
+            self.cfg_cmd.gp_cmd = 'GENERAL_PURPOSE_CMD_SET_OPERATIONAL_MODE'
+            self.cfg_cmd.gp_param = TRACTOR_REQUEST
+            self.cfg_cmd.header.stamp = rospy.get_rostime()
+            self.cfg_pub.publish(cfg_cmd)
+            self.r.sleep
 
     def start(self):
-        rospy.init_node('keyboard_teleop')
+        print self.msg
 
-        threading.Thread(target=setGP)
+        threading.Thread(target=self.setGP)
         
         while not rospy.is_shutdown():
             try:
 
                 twist = Twist()
 
-                key = getKey()
+                key = self.getKey()
 
                 v_x = 0
                 v_y = 0
                 a_z = 0
 
-                if key in moves:
-                    v_x = moves[key][0]
-                    v_y = moves[key][1]
-                    a_z = moves[key][2]
+                if key in self.moves:
+                    v_x = self.moves[key][0]
+                    v_y = self.moves[key][1]
+                    a_z = self.moves[key][2]
 
                 else:
                     v_x = 0
@@ -107,14 +103,16 @@ class KeyboardTeleop:
                 twist.linear.x = v_x
                 twist.linear.y = v_y
                 twist.angular.z = a_z
-                pub.publish(twist)
+                self.pub.publish(twist)
 
-                termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
+                termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.settings)
 
             except Exception as e:
                 print(e)
 
 
 if __name__ == "__main__":
+    rospy.init_node('keyboard_teleop')
     kt = KeyboardTeleop()
     kt.start()
+
