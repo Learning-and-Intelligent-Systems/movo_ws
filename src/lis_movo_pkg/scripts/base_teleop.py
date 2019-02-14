@@ -31,7 +31,7 @@ def callback(joy):
 
     # Use left trigger as deadman: actions only happen if trigger pressed down
     if deadman < -0.5:
-        d = 2
+        d = 1
     else:
         d = 0
 
