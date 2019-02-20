@@ -2,8 +2,6 @@
 # Author: Silvia Knappe
 # Control movo with keyboard teleop, adapted from ROS teleop_twist_keyboard.py
 
-#TODO Add instructions "wasd to move" etc
-
 import rospy
 
 from geometry_msgs.msg import Twist
@@ -48,7 +46,7 @@ class KeyboardTeleop:
 
 
     def getKey(self):
-
+        # TODO: WHy the heck is this lagging out for 2 get keys, output looks like "key,key, None, None, key, key, key, key, ......" 
         fd = sys.stdin.fileno()
         old = termios.tcgetattr(fd)
 
@@ -83,7 +81,6 @@ class KeyboardTeleop:
                 twist = Twist()
 
                 key = self.getKey()
-
                 v_x = 0
                 v_y = 0
                 a_z = 0
