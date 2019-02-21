@@ -46,17 +46,12 @@ class KeyboardTeleop:
 
 
     def getKey(self):
-        # TODO: WHy the heck is this lagging out for 2 get keys, output looks like "key,key, None, None, key, key, key, key, ......" 
         fd = sys.stdin.fileno()
         old = termios.tcgetattr(fd)
 
         try:
             tty.setraw(sys.stdin.fileno())
-            [i,o,e] = select.select([sys.stdin.fileno()],[],[],0.2)
-            if i:
-                ch = sys.stdin.read(1)
-            else:
-                ch = None
+            ch = sys.stdin.read(1)
         finally:
             termios.tcsetattr(fd,termios.TCSADRAIN,old)
 
