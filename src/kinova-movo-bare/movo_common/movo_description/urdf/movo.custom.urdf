@@ -552,7 +552,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <joint name="right_shoulder_pan_joint" type="revolute">
     <parent link="right_base_link" />
     <child link="right_shoulder_link" />
-    <origin rpy="0.00000000 3.14159265 0.98853872" xyz="0.00000000 0.00000000 0.06250000" />
+    <origin rpy="0 3.14159265 0" xyz="0 0 0.0625" />
     <axis xyz="0 0 1" />
     <limit effort="18000.0" lower="-3.14159265" upper="3.14159265" velocity="0.691150384" />
     <dynamics damping="0.01" friction="0.0" />
@@ -586,7 +586,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <joint name="right_shoulder_lift_joint" type="revolute">
     <parent link="right_shoulder_link" />
     <child link="right_arm_half_1_link" />
-    <origin rpy="1.57079633 0.00000000 0.94894157" xyz="0.00000000 0.00000000 -0.11875000" />
+    <origin rpy="1.570796325 0 0" xyz="0 0 -0.11875" />
     <axis xyz="0 0 1" />
     <limit effort="30000.5" lower="-2.238" upper="2.238" velocity="0.691150384" />
     <dynamics damping="0.01" friction="0.0" />
@@ -620,7 +620,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <joint name="right_arm_half_joint" type="revolute">
     <parent link="right_arm_half_1_link" />
     <child link="right_arm_half_2_link" />
-    <origin rpy="-1.57079633 0.00000000 -0.01392410" xyz="0.00000000 -0.20500000 0.00000000" />
+    <origin rpy="-1.570796325 0 0" xyz="0 -0.205 0" />
     <axis xyz="0 0 1" />
     <limit effort="30000.5" lower="-3.14159265" upper="3.14159265" velocity="0.691150384" />
     <dynamics damping="0.01" friction="0.0" />
@@ -654,7 +654,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <joint name="right_elbow_joint" type="revolute">
     <parent link="right_arm_half_2_link" />
     <child link="right_forearm_link" />
-    <origin rpy="-1.57079633 0.00000000 0.03700006" xyz="0.00000000 0.00000000 -0.20500000" />
+    <origin rpy="-1.570796325 0 0" xyz="0 0 -0.205" />
     <axis xyz="0 0 1" />
     <limit effort="18000.0" lower="-2.809" upper="2.809" velocity="0.691150384" />
     <dynamics damping="0.01" friction="0.0" />

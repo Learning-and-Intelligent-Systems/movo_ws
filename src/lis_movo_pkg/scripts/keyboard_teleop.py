@@ -7,7 +7,6 @@ import rospy
 from geometry_msgs.msg import Twist
 from movo.system_defines import TRACTOR_REQUEST
 from movo_msgs.msg import ConfigCmd
-
 import sys, select, termios, tty, threading
 
 class KeyboardTeleop:
@@ -41,6 +40,10 @@ class KeyboardTeleop:
         self.cfg_cmd = ConfigCmd()
         self.cfg_pub = rospy.Publisher('/movo/gp_command', ConfigCmd, queue_size=1)
         self.r = rospy.Rate(10)
+        self.thread = threading.Thread(target=self.setGP)
+        self.thread_r = rospy.Rate(1)
+        self.kill = False
+
 
         self.settings = termios.tcgetattr(sys.stdin)
 
@@ -58,17 +61,17 @@ class KeyboardTeleop:
         return ch
 
     def setGP(self):
-        while not rospy.is_shutdown():
+        while not rospy.is_shutdown() and not self.kill:
             self.cfg_cmd.gp_cmd = 'GENERAL_PURPOSE_CMD_SET_OPERATIONAL_MODE'
             self.cfg_cmd.gp_param = TRACTOR_REQUEST
             self.cfg_cmd.header.stamp = rospy.get_rostime()
-            self.cfg_pub.publish(cfg_cmd)
-            self.r.sleep
+            self.cfg_pub.publish(self.cfg_cmd)
+            self.thread_r.sleep()
 
     def start(self):
         print self.msg
+        self.thread.start()
 
-        threading.Thread(target=self.setGP)
         
         while not rospy.is_shutdown():
             try:
@@ -90,6 +93,8 @@ class KeyboardTeleop:
                     v_y = 0
                     a_z = 0
                     if (key == '\x03'):
+                        print "Goodbye!"
+                        self.kill = True
                         break
                         
                 twist.linear.x = v_x
