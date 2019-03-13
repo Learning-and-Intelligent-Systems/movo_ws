@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Author: Silvia Knappe
-# Control movo with keyboard teleop, adapted from ROS teleop_twist_keyboard.py
+# Control movo with keyboard teleop, moves base and torso!
 
 import rospy
 
